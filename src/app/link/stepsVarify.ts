@@ -39,6 +39,7 @@ const checkHTTPStatus = async (
       error: `Received status code: ${response.status}`,
     };
   } catch (err: any) {
+    console.log(err)
     console.error(
       "HTTP Check Error::------ line 43 step verification------",
       err.message || "HTTP request failed"
@@ -135,21 +136,25 @@ const checkSpamStatus = async (
   }
 };
 
-// Main function for steps verification
 export const stepsVerification = async (
   step: "Syntax Validation" | "DNS Lookup" | "HTTP Check" | "Spam Check",
   url: string
 ): Promise<"process" | "success" | { error?: string }> => {
-  switch (step) {
-    case "Syntax Validation":
-      return syntaxValidation(url);
-    case "DNS Lookup":
-      return await dnsLookup(url);
-    case "HTTP Check":
-      return await httpCheck(url);
-    case "Spam Check":
-      return await checkSpamStatus(url);
-    default:
-      return "process";
+  try {
+    switch (step) {
+      case "Syntax Validation":
+        return syntaxValidation(url);
+      case "DNS Lookup":
+        return await dnsLookup(url);
+      case "HTTP Check":
+        return await httpCheck(url);
+      case "Spam Check":
+        return await checkSpamStatus(url);
+      default:
+        return { error: "Invalid verification step." };
+    }
+  } catch (error) {
+    console.error(`Error during ${step}:`, error);
+    return { error: (error as any).message || "Unknown error during verification." };
   }
 };
