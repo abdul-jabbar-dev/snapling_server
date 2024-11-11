@@ -6,7 +6,7 @@ import cors from "cors";
 import asyncHandler from "express-async-handler";
 
 dotenv.config();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4444;
 
 const app = express();
 
